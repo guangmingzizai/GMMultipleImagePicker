@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'GMMultipleImagePicker_Example' do
+  pod 'GMMultipleImagePicker', :path => '../'
+
+  target 'GMMultipleImagePicker_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
