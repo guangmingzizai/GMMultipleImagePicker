@@ -1,0 +1,30 @@
+{
+  "name": "GMMultipleImagePicker",
+  "version": "0.1.0",
+  "summary": "A short description of GMMultipleImagePicker.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/guangmingzizai@qq.com/GMMultipleImagePicker",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "guangmingzizai@qq.com": "guangmingzizai@qq.com"
+  },
+  "source": {
+    "git": "https://github.com/guangmingzizai@qq.com/GMMultipleImagePicker.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "GMMultipleImagePicker/Classes/**/*",
+  "dependencies": {
+    "BLPhotoAssetPickerController": [
+
+    ],
+    "RMUniversalAlert": [
+
+    ]
+  }
+}

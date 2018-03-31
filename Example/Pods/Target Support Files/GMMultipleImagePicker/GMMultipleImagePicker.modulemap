@@ -1,0 +1,6 @@
+framework module GMMultipleImagePicker {
+  umbrella header "GMMultipleImagePicker-umbrella.h"
+
+  export *
+  module * { export * }
+}

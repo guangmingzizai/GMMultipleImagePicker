@@ -1,0 +1,6 @@
+framework module MWPhotoBrowser_guangmingzizai {
+  umbrella header "MWPhotoBrowser@guangmingzizai-umbrella.h"
+
+  export *
+  module * { export * }
+}

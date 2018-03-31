@@ -1,0 +1,6 @@
+framework module Pods_GMMultipleImagePicker_Example {
+  umbrella header "Pods-GMMultipleImagePicker_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}
