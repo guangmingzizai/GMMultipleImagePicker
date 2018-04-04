@@ -300,8 +300,8 @@ NSError *MakeError(NSString *message,
         GMMultipleImagePickerResponse *response = [GMMultipleImagePickerResponse new];
         response.width = image.size.width;
         response.height = image.size.height;
-        
         response.isVertical = (image.size.width < image.size.height);
+        response.image = image;
         
         if (![[self.options objectForKey:@"noData"] boolValue]) {
             response.data = [data base64EncodedStringWithOptions:0];
@@ -309,6 +309,12 @@ NSError *MakeError(NSString *message,
         
         NSURL *fileURL = [NSURL fileURLWithPath:cachePath];
         response.uri = [fileURL absoluteString];
+        
+        // add ref to the original image
+        NSString *origURL = [imageURL absoluteString];
+        if (origURL) {
+            response.origURL = origURL;
+        }
         
         NSNumber *fileSizeValue = nil;
         NSError *fileSizeError = nil;
