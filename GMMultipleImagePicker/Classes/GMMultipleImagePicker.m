@@ -154,7 +154,7 @@ NSError *MakeError(NSString *message,
         
         BLPhotoAssetPickerController *assetPickerViewController = [[BLPhotoAssetPickerController alloc] init];
         assetPickerViewController.maxSelectionNum = (self.options[@"maxSelectionNum"] ? [self.options[@"maxSelectionNum"] integerValue] : 9);
-        assetPickerViewController.cameraEnable = NO;
+        assetPickerViewController.cameraEnable = (self.options[@"cameraEnable"] ? [self.options[@"cameraEnable"] boolValue] : NO);
         assetPickerViewController.delegate = self;
         
         BLPhotoAssetNavigationController *pickerNavigationController = [[BLPhotoAssetNavigationController alloc] initWithRootViewController:assetPickerViewController];
