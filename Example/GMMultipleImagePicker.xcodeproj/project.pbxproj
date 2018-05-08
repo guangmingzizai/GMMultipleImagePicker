@@ -37,7 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		14EE4DA33C85E4095AA1761C /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		14EE4DA33C85E4095AA1761C /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		1A771DE2E61682989AA97059 /* Pods-GMMultipleImagePicker_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GMMultipleImagePicker_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GMMultipleImagePicker_Example/Pods-GMMultipleImagePicker_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		38DF99552827D39827B752A9 /* Pods-GMMultipleImagePicker_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GMMultipleImagePicker_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-GMMultipleImagePicker_Example/Pods-GMMultipleImagePicker_Example.release.xcconfig"; sourceTree = "<group>"; };
 		3BAA65FA2916B3F78ADE0640 /* Pods_GMMultipleImagePicker_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GMMultipleImagePicker_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,8 +64,8 @@
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		998591C3A182B6E6AC01AD52 /* Pods-GMMultipleImagePicker_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GMMultipleImagePicker_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GMMultipleImagePicker_Tests/Pods-GMMultipleImagePicker_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C1AED0F2E3C9014EB1E945E9 /* Pods_GMMultipleImagePicker_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GMMultipleImagePicker_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CD284CEA4A6B4DFF3D030CC8 /* GMMultipleImagePicker.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = GMMultipleImagePicker.podspec; path = ../GMMultipleImagePicker.podspec; sourceTree = "<group>"; };
-		E20EA701EACC6DA410C0C6C6 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		CD284CEA4A6B4DFF3D030CC8 /* GMMultipleImagePicker.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = GMMultipleImagePicker.podspec; path = ../GMMultipleImagePicker.podspec; sourceTree = "<group>"; };
+		E20EA701EACC6DA410C0C6C6 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		E5C364EFA8870F7CBDFF058B /* Pods-GMMultipleImagePicker_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GMMultipleImagePicker_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GMMultipleImagePicker_Tests/Pods-GMMultipleImagePicker_Tests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -250,6 +250,9 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "guangmingzizai@qq.com";
 				TargetAttributes = {
+					6003F589195388D20070C39A = {
+						DevelopmentTeam = WT4LUW6PCP;
+					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
 					};
@@ -555,6 +558,7 @@
 			baseConfigurationReference = 1A771DE2E61682989AA97059 /* Pods-GMMultipleImagePicker_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = WT4LUW6PCP;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GMMultipleImagePicker/GMMultipleImagePicker-Prefix.pch";
 				INFOPLIST_FILE = "GMMultipleImagePicker/GMMultipleImagePicker-Info.plist";
@@ -570,6 +574,7 @@
 			baseConfigurationReference = 38DF99552827D39827B752A9 /* Pods-GMMultipleImagePicker_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = WT4LUW6PCP;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GMMultipleImagePicker/GMMultipleImagePicker-Prefix.pch";
 				INFOPLIST_FILE = "GMMultipleImagePicker/GMMultipleImagePicker-Info.plist";

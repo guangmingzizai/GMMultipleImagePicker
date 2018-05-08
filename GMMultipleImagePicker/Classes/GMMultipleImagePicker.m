@@ -244,7 +244,7 @@ NSError *MakeError(NSString *message,
     }
 }
 
-- (NSString *)_defaultCachePathForAsset:(PHAsset *)asset {
+- (NSString *)_defaultCachePathForAsset:(nullable PHAsset *)asset {
     NSString *fileName = [[[NSUUID UUID] UUIDString] stringByAppendingString:@".jpg"];
     return [[NSTemporaryDirectory() stringByStandardizingPath] stringByAppendingPathComponent:fileName];
 }
@@ -412,6 +412,17 @@ NSError *MakeError(NSString *message,
 #pragma mark - BLPhotoAssetPickerControllerDelegate
 
 - (void)photoAssetPickerController:(BLPhotoAssetPickerController *)picker didFinishPickingAssets:(NSArray<PHAsset *> *)assets {
+    [self photoAssetPickerController:picker didFinishTakingPhoto:nil andPickingAssets:assets];
+}
+
+- (void)photoAssetPickerControllerDidCancel:(BLPhotoAssetPickerController *)picker {
+    if (self.callback) {
+        self.callback(MakeError(@"CANCELLED", nil, nil), nil);
+        self.callback = nil;
+    }
+}
+
+- (void)photoAssetPickerController:(BLPhotoAssetPickerController *)picker didFinishTakingPhoto:(UIImage *)image andPickingAssets:(NSArray *)assets {
     [picker dismissViewControllerAnimated:YES completion:nil];
     
     __block NSInteger fetchData = 0;
@@ -430,7 +441,11 @@ NSError *MakeError(NSString *message,
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                        {
-                           [self _handleMultipleImagePickerResult:assets images:images];
+                           NSArray<UIImage *> *targetImages = [images copy];
+                           if (image != nil) {
+                               targetImages = [targetImages arrayByAddingObject:image];
+                           }
+                           [self _handleMultipleImagePickerResult:images];
                        });
     } requestIDsBlock:^(NSArray<NSNumber *> *requestArray) {
         _requestImageIdArray = requestArray;
@@ -442,16 +457,6 @@ NSError *MakeError(NSString *message,
             [_uploadHud addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelLoadThumbnailAlert)]];
         }
     });
-}
-
-- (void)photoAssetPickerControllerDidCancel:(BLPhotoAssetPickerController *)picker {
-    if (self.callback) {
-        self.callback(MakeError(@"CANCELLED", nil, nil), nil);
-        self.callback = nil;
-    }
-}
-
-- (void)photoAssetPickerController:(BLPhotoAssetPickerController *)picker didFinishTakingPhoto:(UIImage *)image andPickingAssets:(NSArray *)assets {
 }
 
 
@@ -488,13 +493,12 @@ NSError *MakeError(NSString *message,
     }
 }
 
-- (void)_handleMultipleImagePickerResult:(NSArray <PHAsset *> *)assets images:(NSArray<UIImage *> *)images {
+- (void)_handleMultipleImagePickerResult:(NSArray<UIImage *> *)images {
     NSMutableDictionary *resultImageInfos = [NSMutableDictionary dictionaryWithCapacity:images.count];
-    for (int i = 0; i < assets.count; i++) {
-        PHAsset *asset = assets[i];
+    for (int i = 0; i < images.count; i++) {
         UIImage *image = images[i];
         
-        NSString *cachePath = [self _defaultCachePathForAsset:asset];
+        NSString *cachePath = [self _defaultCachePathForAsset: nil];
         NSError *error = nil;
         cachePath = [self _resetCachePathIfNeeded:cachePath error:&error];
         if (error) {
@@ -514,9 +518,9 @@ NSError *MakeError(NSString *message,
             } else {
                 resultImageInfos[@(i)] = response;
                 
-                if (resultImageInfos.count == assets.count) {
-                    NSMutableArray *results = [NSMutableArray arrayWithCapacity:assets.count];
-                    for (int j = 0; j < assets.count; j++) {
+                if (resultImageInfos.count == images.count) {
+                    NSMutableArray *results = [NSMutableArray arrayWithCapacity:images.count];
+                    for (int j = 0; j < images.count; j++) {
                         [results addObject:resultImageInfos[@(j)]];
                     }
                     if (self.callback) {
