@@ -445,14 +445,14 @@ NSError *MakeError(NSString *message,
                            if (image != nil) {
                                targetImages = [targetImages arrayByAddingObject:image];
                            }
-                           [self _handleMultipleImagePickerResult:images];
+                           [self _handleMultipleImagePickerResult:targetImages];
                        });
     } requestIDsBlock:^(NSArray<NSNumber *> *requestArray) {
         _requestImageIdArray = requestArray;
     }];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        if (fetchData == 0) {
+        if (assets.count > 0 && fetchData == 0) {
             _uploadHud = [MBProgressHUD showProcessTip:@"正在加载..."];
             [_uploadHud addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelLoadThumbnailAlert)]];
         }
