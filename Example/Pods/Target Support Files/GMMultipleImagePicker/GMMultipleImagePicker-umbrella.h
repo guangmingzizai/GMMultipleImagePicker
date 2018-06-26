@@ -14,6 +14,7 @@
 #import "UIImage+GMAdditions.h"
 #import "UIViewController+GMAdditions.h"
 #import "GMMultipleImagePicker.h"
+#import "GMMultipleImagePickerResponse.h"
 #import "GMPermission.h"
 
 FOUNDATION_EXPORT double GMMultipleImagePickerVersionNumber;

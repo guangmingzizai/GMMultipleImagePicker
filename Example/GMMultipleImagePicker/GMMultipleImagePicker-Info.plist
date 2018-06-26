@@ -24,6 +24,10 @@
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>我们需要访问您的相机上传头像或者图片</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>我们需要访问您的相册上传头像或者图片</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

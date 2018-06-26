@@ -43,7 +43,7 @@
 - (UILabel *)countLabel {
     if (!_countLabel) {
         UILabel *label = [UILabel new];
-        label.backgroundColor = UIColorFromRGB(0xffc200);
+        label.backgroundColor = UIColorFromRGB(0x796CF0);
         label.layer.cornerRadius = 11;
         label.layer.masksToBounds = YES;
         label.textColor = [UIColor whiteColor];
@@ -59,7 +59,7 @@
     if (!_finishButton) {
         UIButton *button = [UIButton new];
         [button setTitle:@"完成" forState:UIControlStateNormal];
-        [button setTitleColor:UIColorFromRGB(0xffc200) forState:UIControlStateNormal];
+        [button setTitleColor:UIColorFromRGB(0x796CF0) forState:UIControlStateNormal];
         button.titleLabel.font = [UIFont systemFontOfSize:16];
         
         _finishButton = button;

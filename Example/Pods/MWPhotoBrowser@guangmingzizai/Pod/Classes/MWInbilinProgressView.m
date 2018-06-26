@@ -45,7 +45,7 @@
         _rightProgressView = [UIView new];
         _bottomProgressView = [UIView new];
         
-        _leftProgressView.backgroundColor = _topProgressView.backgroundColor = _rightProgressView.backgroundColor = _bottomProgressView.backgroundColor = UIColorFromRGB(0xffc200);
+        _leftProgressView.backgroundColor = _topProgressView.backgroundColor = _rightProgressView.backgroundColor = _bottomProgressView.backgroundColor = UIColorFromRGB(0x796CF0);
         _leftProgressView.alpha = _topProgressView.alpha = _rightProgressView.alpha = _bottomProgressView.alpha = 0.25;
         
         [self addSubview:_leftProgressView];
@@ -55,7 +55,7 @@
         
         _progressLabel = [UILabel new];
         _progressLabel.font = [UIFont systemFontOfSize:16];
-        _progressLabel.textColor = UIColorFromRGB(0xffc200);
+        _progressLabel.textColor = UIColorFromRGB(0x796CF0);
         _progressLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_progressLabel];
     }

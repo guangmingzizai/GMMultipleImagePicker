@@ -146,7 +146,7 @@
     _previewLabel.text = NSLocalizedString(@"预览", Nil);
     _previewLabel.backgroundColor = [UIColor clearColor];
     _previewLabel.font = [UIFont systemFontOfSize:16];
-    _previewLabel.textColor = UIColorFromRGB(0x7969a6);
+    _previewLabel.textColor = UIColorFromRGB(0x796CF0);
     
     _previewLabel.userInteractionEnabled = NO;
     _previewLabel.alpha = 0.3;
@@ -162,7 +162,7 @@
     _finishLabel.text = NSLocalizedString(@"完成", Nil);
     _finishLabel.backgroundColor = [UIColor clearColor];
     _finishLabel.font = [UIFont systemFontOfSize:16];
-    _finishLabel.textColor = UIColorFromRGB(0xffc200);
+    _finishLabel.textColor = UIColorFromRGB(0x796CF0);
     _finishLabel.textAlignment = NSTextAlignmentLeft;
     [_bottomBg addSubview:_finishLabel];
     CGSize size = [_finishLabel.text sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:16]}];
@@ -176,7 +176,7 @@
     [_finishLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(finishChoosePhoto)]];
     
     _choseCountLabel = [[UILabel alloc]init];
-    _choseCountLabel.backgroundColor = UIColorFromRGB(0xffc200);
+    _choseCountLabel.backgroundColor = UIColorFromRGB(0x796CF0);
     _choseCountLabel.textAlignment = NSTextAlignmentCenter;
     _choseCountLabel.text = @"0";
     _choseCountLabel.textColor = [UIColor whiteColor];
