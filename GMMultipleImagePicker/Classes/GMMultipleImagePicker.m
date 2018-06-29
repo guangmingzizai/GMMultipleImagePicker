@@ -453,14 +453,15 @@ NSError *MakeError(NSString *message,
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         if (assets.count > 0 && fetchData == 0) {
-            _uploadHud = [MBProgressHUD showProcessTip:@"正在加载..."];
-            [_uploadHud addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelLoadThumbnailAlert)]];
+            self->_uploadHud = [MBProgressHUD showProcessTip:@"正在加载..."];
+            [self->_uploadHud addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelLoadThumbnailAlert)]];
         }
     });
 }
 
 
 - (void)cancelLoadThumbnailAlert {
+    _uploadHud.userInteractionEnabled = NO;
     __weak typeof(self) weakSelf = self;
     [RMUniversalAlert showAlertInViewController:[UIViewController gm_toppestPresentedViewController]
                                       withTitle:@"取消图片加载？"
