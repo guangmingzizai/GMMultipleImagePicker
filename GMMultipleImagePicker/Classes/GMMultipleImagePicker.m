@@ -202,7 +202,7 @@ NSError *MakeError(NSString *message,
         
         // GIFs break when resized, so we handle them differently
         if (imageURL && [[imageURL absoluteString] rangeOfString:@"ext=GIF"].location != NSNotFound) {
-            [self _gitResponseForImage:image imageURL:imageURL cachePath:path completionBlock:^(NSError *error, GMMultipleImagePickerResponse *response) {
+            [self _gifResponseForImage:image imageURL:imageURL cachePath:path completionBlock:^(NSError *error, GMMultipleImagePickerResponse *response) {
                 if (error) {
                     self.callback(MakeError(@"ACCESS_IMAGE_FAILED", nil, nil), nil);
                 } else {
@@ -245,7 +245,7 @@ NSError *MakeError(NSString *message,
 }
 
 - (NSString *)_defaultCachePathForAsset:(nullable PHAsset *)asset {
-    NSString *fileName = [[[NSUUID UUID] UUIDString] stringByAppendingString:@".jpg"];
+    NSString *fileName = [[NSUUID UUID] UUIDString];
     return [[NSTemporaryDirectory() stringByStandardizingPath] stringByAppendingPathComponent:fileName];
 }
 
@@ -288,7 +288,7 @@ NSError *MakeError(NSString *message,
     return path;
 }
 
-- (void)_gitResponseForImage:(UIImage *)image imageURL:(NSURL *)imageURL cachePath:(NSString *)cachePath completionBlock:(void (^)(NSError *error, GMMultipleImagePickerResponse *response))completionBlock {
+- (void)_gifResponseForImage:(UIImage *)image imageURL:(NSURL *)imageURL cachePath:(NSString *)cachePath completionBlock:(void (^)(NSError *error, GMMultipleImagePickerResponse *response))completionBlock {
     ALAssetsLibrary* assetsLibrary = [[ALAssetsLibrary alloc] init];
     [assetsLibrary assetForURL:imageURL resultBlock:^(ALAsset *asset) {
         ALAssetRepresentation *rep = [asset defaultRepresentation];
@@ -510,7 +510,7 @@ NSError *MakeError(NSString *message,
             break;
         }
         
-        [self _responseForImage:image needDownscale:NO imageURL:nil cachePath:cachePath completionBlock:^(NSError *error, GMMultipleImagePickerResponse *response) {
+        void (^completionBlock)(NSError *, GMMultipleImagePickerResponse *) = ^(NSError *error, GMMultipleImagePickerResponse *response) {
             if (error) {
                 if (self.callback) {
                     self.callback(MakeError(@"ACCESS_IMAGE_FAILED", nil, nil), nil);
@@ -530,7 +530,13 @@ NSError *MakeError(NSString *message,
                     }
                 }
             }
-        }];
+        };
+        
+        if (image.images != nil) {
+            [self _gifResponseForImage:image imageURL:nil cachePath:cachePath completionBlock:completionBlock];
+        } else {
+            [self _responseForImage:image needDownscale:NO imageURL:nil cachePath:cachePath completionBlock:completionBlock];
+        }
     }
 }
 
