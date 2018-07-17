@@ -20,6 +20,7 @@
 #import <BLPhotoAssetPickerController/BLPhotoUtils.h>
 #import <BLPhotoAssetPickerController/MBProgressHUD+Add.h>
 #import <BLPhotoAssetPickerController/BLPhotoDataCenter.h>
+#import <BLPhotoAssetPickerController/BLPhotoAssetImageRequestResultItem.h>
 #import <RMUniversalAlert/RMUniversalAlert.h>
 
 NSDictionary<NSString *, id> *GMMakeError(NSString *message,
@@ -202,7 +203,7 @@ NSError *MakeError(NSString *message,
         
         // GIFs break when resized, so we handle them differently
         if (imageURL && [[imageURL absoluteString] rangeOfString:@"ext=GIF"].location != NSNotFound) {
-            [self _gifResponseForImage:image imageURL:imageURL cachePath:path completionBlock:^(NSError *error, GMMultipleImagePickerResponse *response) {
+            [self _gifResponseForImage:image assetURL:imageURL cachePath:path completionBlock:^(NSError *error, GMMultipleImagePickerResponse *response) {
                 if (error) {
                     self.callback(MakeError(@"ACCESS_IMAGE_FAILED", nil, nil), nil);
                 } else {
@@ -288,9 +289,9 @@ NSError *MakeError(NSString *message,
     return path;
 }
 
-- (void)_gifResponseForImage:(UIImage *)image imageURL:(NSURL *)imageURL cachePath:(NSString *)cachePath completionBlock:(void (^)(NSError *error, GMMultipleImagePickerResponse *response))completionBlock {
+- (void)_gifResponseForImage:(UIImage *)image assetURL:(NSURL *)assetURL cachePath:(NSString *)cachePath completionBlock:(void (^)(NSError *error, GMMultipleImagePickerResponse *response))completionBlock {
     ALAssetsLibrary* assetsLibrary = [[ALAssetsLibrary alloc] init];
-    [assetsLibrary assetForURL:imageURL resultBlock:^(ALAsset *asset) {
+    [assetsLibrary assetForURL:assetURL resultBlock:^(ALAsset *asset) {
         ALAssetRepresentation *rep = [asset defaultRepresentation];
         Byte *buffer = (Byte*)malloc(rep.size);
         NSUInteger buffered = [rep getBytes:buffer fromOffset:0.0 length:rep.size error:nil];
@@ -311,7 +312,7 @@ NSError *MakeError(NSString *message,
         response.uri = [fileURL absoluteString];
         
         // add ref to the original image
-        NSString *origURL = [imageURL absoluteString];
+        NSString *origURL = [assetURL absoluteString];
         if (origURL) {
             response.origURL = origURL;
         }
@@ -326,6 +327,29 @@ NSError *MakeError(NSString *message,
     } failureBlock:^(NSError *error) {
         completionBlock(error, nil);
     }];
+}
+
+- (void)_gifResponseForImage:(UIImage *)image imageData:(NSData *)imageData cachePath:(NSString *)cachePath completionBlock:(void (^)(NSError *error, GMMultipleImagePickerResponse *response))completionBlock {
+    [imageData writeToFile:cachePath atomically:YES];
+    
+    GMMultipleImagePickerResponse *response = [GMMultipleImagePickerResponse new];
+    response.width = image.size.width;
+    response.height = image.size.height;
+    response.isVertical = (image.size.width < image.size.height);
+    response.image = image;
+    
+    if (![[self.options objectForKey:@"noData"] boolValue]) {
+        response.data = [imageData base64EncodedStringWithOptions:0];
+    }
+    
+    NSURL *targetFileURL = [NSURL fileURLWithPath:cachePath];
+    response.uri = [targetFileURL absoluteString];
+    
+    NSNumber *fileSizeValue = @(imageData.length);
+    if (fileSizeValue){
+        response.fileSize = fileSizeValue;
+    }
+    completionBlock(nil, response);
 }
 
 - (void)_responseForImage:(UIImage *)image needDownscale:(BOOL)needDownscale imageURL:(NSURL *)imageURL cachePath:(NSString *)cachePath completionBlock:(void (^)(NSError *error, GMMultipleImagePickerResponse *response))completionBlock {
@@ -434,16 +458,17 @@ NSError *MakeError(NSString *message,
     if ([self.options valueForKey:@"maxHeight"]) {
         maxHeight = [[self.options valueForKey:@"maxHeight"] floatValue];
     }
-    [BLPhotoDataCenter requestImagesForAssets:assets maxSize:CGSizeMake(maxWidth, maxHeight) completionBlock:^(NSArray<UIImage *> *images) {
+    
+    [BLPhotoDataCenter requestImagesForAssets:assets maxSize:CGSizeMake(maxWidth, maxHeight) completionBlock:^(NSArray<BLPhotoAssetImageRequestResultItem *> *images) {
         fetchData = 1;
         
         [_uploadHud hideAnimated:YES];
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                        {
-                           NSArray<UIImage *> *targetImages = [images copy];
+                           NSArray<BLPhotoAssetImageRequestResultItem *> *targetImages = [images copy];
                            if (image != nil) {
-                               targetImages = [targetImages arrayByAddingObject:image];
+                               targetImages = [targetImages arrayByAddingObject: [BLPhotoAssetImageRequestResultItem itemWithImage:image imageData:nil]];
                            }
                            [self _handleMultipleImagePickerResult:targetImages];
                        });
@@ -494,10 +519,11 @@ NSError *MakeError(NSString *message,
     }
 }
 
-- (void)_handleMultipleImagePickerResult:(NSArray<UIImage *> *)images {
-    NSMutableDictionary *resultImageInfos = [NSMutableDictionary dictionaryWithCapacity:images.count];
-    for (int i = 0; i < images.count; i++) {
-        UIImage *image = images[i];
+- (void)_handleMultipleImagePickerResult:(NSArray<BLPhotoAssetImageRequestResultItem *> *)items {
+    NSMutableDictionary *resultImageInfos = [NSMutableDictionary dictionaryWithCapacity:items.count];
+    for (int i = 0; i < items.count; i++) {
+        BLPhotoAssetImageRequestResultItem *item = items[i];
+        UIImage *image = item.image;
         
         NSString *cachePath = [self _defaultCachePathForAsset: nil];
         NSError *error = nil;
@@ -519,9 +545,9 @@ NSError *MakeError(NSString *message,
             } else {
                 resultImageInfos[@(i)] = response;
                 
-                if (resultImageInfos.count == images.count) {
-                    NSMutableArray *results = [NSMutableArray arrayWithCapacity:images.count];
-                    for (int j = 0; j < images.count; j++) {
+                if (resultImageInfos.count == items.count) {
+                    NSMutableArray *results = [NSMutableArray arrayWithCapacity:items.count];
+                    for (int j = 0; j < items.count; j++) {
                         [results addObject:resultImageInfos[@(j)]];
                     }
                     if (self.callback) {
@@ -533,7 +559,7 @@ NSError *MakeError(NSString *message,
         };
         
         if (image.images != nil) {
-            [self _gifResponseForImage:image imageURL:nil cachePath:cachePath completionBlock:completionBlock];
+            [self _gifResponseForImage:image imageData: item.imageData cachePath:cachePath completionBlock:completionBlock];
         } else {
             [self _responseForImage:image needDownscale:NO imageURL:nil cachePath:cachePath completionBlock:completionBlock];
         }
